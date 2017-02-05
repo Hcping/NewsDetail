@@ -206,7 +206,8 @@ public class DetailListView extends ListView implements /*View.OnTouchListener,*
 
     public void startFling(int y) {
         try {
-            mFlingStart.invoke(mFlingRunnableField.get(this));
+            smoothScrollBy(10,10);
+            //mFlingStart.invoke(mFlingRunnableField.get(this));
             reportScrollStateChange.invoke(this, AbsListView.OnScrollListener.SCROLL_STATE_FLING);
             mFlingStart.invoke(mFlingRunnableField.get(this), y);
         } catch (Exception ex) {

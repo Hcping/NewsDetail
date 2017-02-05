@@ -1,6 +1,7 @@
 package com.sword.newsdetail;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 mScrollView.smoothScrollTo(0,mLastY);
             }
+
+            //mListView.startFling(50000);
+
+            //mListView.startFling(5000);
         }catch (Exception ex){
             ex.printStackTrace();
         }
@@ -212,7 +217,12 @@ public class MainActivity extends AppCompatActivity {
                 //到底的时候,事件交给listview,此时,需要让scrollview惯性滚动一下,没滚动完之前,不运行scrollview拦截
                 if(!mListView.isHandleTouchEvent() && vericalY<0){
                     handleListViewTouchEvent();
-                    mListView.fling(Math.abs(vericalY/3)/*5000*/);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mListView.fling(Math.abs(vericalY/3));
+                    }else{
+                        mListView.startFling(Math.abs(vericalY/3)/*5000*/);
+                    }
+                    //mListView.startFling(Math.abs(vericalY/3)/*5000*/);
                     mListView.setHandleTouchEvent(true);
                     Log.d(TAG,"==》onScrolledToBottom 让listview fling了!!");
                     return;
