@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sword.newsdetail.view.DetailListView;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private int mWebViewHeight;
     private int mScreenHeight ;
     private int mLastY;
+    private TextView tvReply;
     // WEBVIEW高度:48692
     public void onBtnScroll(View view){
         try {
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         mScrollView = (DetailScrollView) findViewById(R.id.scrollView);
         mWebView = (DetailWebView) findViewById(R.id.webview);
         mListView = (DetailListView) findViewById(R.id.list_view);
-
+        tvReply = (TextView)findViewById(R.id.tvReply);
         initWebView();
         initListView();
         initScrollView();
@@ -112,7 +114,12 @@ public class MainActivity extends AppCompatActivity {
             list.add(map);
         }
         mAdapter = new SimpleAdapter(this, list, R.layout.list_item, from, to);
+
         mListView.setAdapter(mAdapter);
+        TextView textView = new TextView(this);
+        textView.setText("我是底部");
+        mListView.addFooterView(textView);
+
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -288,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private int getListViewHeight(){
-        int value = getResources().getDisplayMetrics().heightPixels-getStatusBarHeight();
+        int value = getResources().getDisplayMetrics().heightPixels-getStatusBarHeight()-tvReply.getHeight();
         return value;
     }
     private int getStatusBarHeight(){
