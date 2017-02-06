@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onMove(float distance) {
                 //listview在顶部的时候,往下滑动,此时需要scrollview跟着一起滚动,进行过渡
-                if(mScrollView!=null && mListView!=null && mListView.getChildCount()>0 && getListViewPositionAtScreen()>=getStatusBarHeight() && distance>0 && mFirstVisibleItem ==0 && mListView.getChildAt(0).getTop()==0){
+                if(mScrollView!=null && mListView!=null && mListView.getChildCount()>0 && getListViewPositionAtScreen()>=getTopHeight() && distance>0 && mFirstVisibleItem ==0 && mListView.getChildAt(0).getTop()==0){
                     // 滚动
                     mScrollView.smoothScrollBy(0, -(int)distance);
                     // 取消listview的事件消费,会在其onTouchEvent返回false
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
     //webview是否超过可见范围,也就是,是否可滚动
     private boolean isWebViewOverScreen(){
-        return mWebViewHeight>(mScreenHeight-getStatusBarHeight())?true:false;
+        return mWebViewHeight>(mScreenHeight-getTopAndBottomHeight())?true:false;
     }
 
     private void initScrollView(){
@@ -303,11 +303,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private int getListViewHeight(){
-        int value = getResources().getDisplayMetrics().heightPixels-getStatusBarHeight()-tvReply.getHeight();
+        int value = getResources().getDisplayMetrics().heightPixels-getTopAndBottomHeight();
         return value;
     }
-    private int getStatusBarHeight(){
-        return dip2px(getApplicationContext(),50+25);//标题栏+状态栏
+    private int getTopHeight(){
+        return dip2px(getApplicationContext(),50+25);
+        //状态栏+标题栏
+    }
+
+    private int getTopAndBottomHeight(){
+        return getTopHeight()+dip2px(getApplicationContext(),45);
+        //状态栏+标题栏+回复栏
     }
 
     public static int dip2px(Context context, float dipValue) {
@@ -332,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
         try{
             if(mListView==null)
                 return;
-            if(mListView.getChildCount()>0 && getListViewPositionAtScreen()>getStatusBarHeight()){
+            if(mListView.getChildCount()>0 && getListViewPositionAtScreen()>getTopHeight()){
                 mListView.setHandleTouchEvent(false);
                 Log.d(TAG,"==》handleListViewTouchEvent listview 露出屏幕,由外部处理事件");
             }else{
