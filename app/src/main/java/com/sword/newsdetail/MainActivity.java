@@ -266,6 +266,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 handleListViewTouchEvent();
+                //防止自带弹性效果的scrollview 计算不准确,再计算一次
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        handleListViewTouchEvent();
+                    }
+                },1000);
+
             }
 
             @Override
