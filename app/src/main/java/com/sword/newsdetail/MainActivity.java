@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         String url = "http://test-news-node.seeyouyima.com/article?news_id=681558";
+        url="https://news-node.seeyouyima.com/article?news_id=1817909&platform=android&v=5.9.1&tbuid=&statinfo=eyJvdCI6IiIsInVhIjoiTGUgWDYyMCIsIm9zIjoiMiIsIm9zdmVyc2lvbiI6IjYuMCIsInNka3ZlcnNpb24iOjIzLCJvcGVudWRpZCI6IjRkZDcwM2VlLTcwNGQtNDZmNy1hNGM1LTU0OTcxYTMyMTI2YiIsImFwbiI6IjQiLCJ1aWQiOjQ5MzQ3NjI4LCJidWlsZHYiOiI1LjkuMSIsIm1hYyI6Ijg2MjM4MDAzOTY0NTExNyIsImFuZHJvaWRpZCI6ImE5NmFmZTJjYzgzMjJhN2QiLCJpbWVpIjoiODYyMzgwMDM5NjQ1MTE3Iiwic291cmNlIjoiU2VleW91QWN0aXZpdHktPk5ld3NEZXRhaWxINUFjdGl2aXR5IiwiY2hhbm5lbGlkIjoiMTExMSIsInYiOiI1LjkuMSJ9&device_id=862380039645117&imei=862380039645117&mode=0&sdkversion=23&bundleid=1111&app_id=1&myclient=0130591111100000&myuid=49347628&auth=3.4BWmwQT1nK5qyKA3W9oyCfPhPihHumJ3l%2BcbuBVupwI%3D";
+
          //url = "http://test-news-node.seeyouyima.com/article?news_id=681523";        //网页很短测试
         mWebView.loadUrl(url);
         mWebView.setWebViewClient(new WebViewClient() {
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 int h = View.MeasureSpec.makeMeasureSpec(0,
                         View.MeasureSpec.UNSPECIFIED);
                 //重新测量
-                view.measure(w, h);
+                //view.measure(w, h);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -119,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = new TextView(this);
         textView.setText("我是底部");
         mListView.addFooterView(textView);
-
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -133,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 //滚动到顶部
-                if(scrollState== AbsListView.OnScrollListener.SCROLL_STATE_IDLE  && mFirstVisibleItem==0 && mListView.getChildAt(0).getTop()==0){
-                    Log.d(TAG,"=======>listview 滚动到顶部,不处理事件了");
+                if(scrollState== AbsListView.OnScrollListener.SCROLL_STATE_IDLE  && mFirstVisibleItem==0 && mListView.getChildAt(0).getTop()==0 ){
+                    Log.d(TAG,"=======>listview 滚动到顶部,不处理事件了,scrollview往上滚动5,让scrollview处理事件");
                     if(mScrollView!=null)
                         mScrollView.smoothScrollBy(0,-5);
                     mListView.setHandleTouchEvent(false);
@@ -211,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private boolean isMoving= false;
 
+
     //webview是否超过可见范围,也就是,是否可滚动
     private boolean isWebViewOverScreen(){
         return mWebViewHeight>(mScreenHeight-getTopAndBottomHeight())?true:false;
@@ -222,14 +224,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScrolledToBottom(int vericalY) {
                 //到底的时候,事件交给listview,此时,需要让scrollview惯性滚动一下,没滚动完之前,不运行scrollview拦截
-                if(!mListView.isHandleTouchEvent() && vericalY<0){
+                if(!mListView.isHandleTouchEvent() && vericalY<0 && !mScrollView.isTouchingScrollView()){
                     handleListViewTouchEvent();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         mListView.fling(Math.abs(vericalY/3));
                     }else{
                         mListView.startFling(Math.abs(vericalY/3)/*5000*/);
                     }
-                    //mListView.startFling(Math.abs(vericalY/3)/*5000*/);
                     mListView.setHandleTouchEvent(true);
                     Log.d(TAG,"==》onScrolledToBottom 让listview fling了!!");
                     return;
@@ -247,10 +248,11 @@ public class MainActivity extends AppCompatActivity {
             //当按下scrollview的时候,如果listview还在fling,强制重置它的位置,并抢夺事件;
             @Override
             public void onDown() {
+
                 if(mListView!=null && mListScrollState==AbsListView.OnScrollListener.SCROLL_STATE_FLING){
-                    Log.d(TAG,"listView还在fling,重置它的位置");
+                    Log.d(TAG,"onDown listView还在fling,重置它的位置");
                     mListView.stopFling();
-                    mListView.setSelectionFromTop(0,0);
+                    mListView.setSelectionFromTop(0,1);
                     mListView.setHandleTouchEvent(false);
                 }
             }
@@ -258,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
             //ListView过渡到ScrollView的时候,需要再惯性让ScrollView再滚动一下
             @Override
             public void onUp(int velocityY) {
+
                 if(isMoving){
                     Log.d(TAG,"mScrollView onUp:"+velocityY);
                     isMoving = false;
@@ -265,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
                         mScrollView.fling(velocityY);
                     }
                 }
+                Log.d(TAG,"mScrollView onUp");
                 handleListViewTouchEvent();
                 //防止自带弹性效果的scrollview 计算不准确,再计算一次
                 new Handler().postDelayed(new Runnable() {
@@ -279,9 +283,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onMove(float distance) {
                 if(mListView!=null && mListScrollState==AbsListView.OnScrollListener.SCROLL_STATE_FLING){
-                    Log.d(TAG,"listView还在fling,重置它的位置");
+                    Log.d(TAG,"onMove listView还在fling,重置它的位置");
                     mListView.stopFling();
-                    mListView.setSelectionFromTop(0,0);
+                    mListView.setSelectionFromTop(0,1);
                     mListView.setHandleTouchEvent(false);
                     mListScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
                 }
