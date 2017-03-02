@@ -1,10 +1,13 @@
 package com.sword.newsdetail.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 public class DetailScrollView extends ScrollView {
