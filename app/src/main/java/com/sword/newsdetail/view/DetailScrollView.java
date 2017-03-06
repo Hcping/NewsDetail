@@ -18,10 +18,8 @@ public class DetailScrollView extends ScrollView {
     private DetailListView mChildListView;
     private int mFlingVelocityY;
     private boolean isTouchingScrollView;
-    //private Scroller mScroller;
     public DetailScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        //mScroller = new Scroller(context);
     }
 
     public boolean isTouchingScrollView() {
