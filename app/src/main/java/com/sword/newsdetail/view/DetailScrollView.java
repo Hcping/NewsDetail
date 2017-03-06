@@ -1,10 +1,13 @@
 package com.sword.newsdetail.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 public class DetailScrollView extends ScrollView {
@@ -14,10 +17,15 @@ public class DetailScrollView extends ScrollView {
     private boolean isScrolledToBottom = false;
     private DetailListView mChildListView;
     private int mFlingVelocityY;
+    private boolean isTouchingScrollView;
     //private Scroller mScroller;
     public DetailScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
         //mScroller = new Scroller(context);
+    }
+
+    public boolean isTouchingScrollView() {
+        return isTouchingScrollView;
     }
 
     private ISmartScrollChangedListener mSmartScrollChangedListener;
@@ -119,12 +127,14 @@ public class DetailScrollView extends ScrollView {
                     Log.d(TAG,"------->onTouchEvent ACTION_DOWN->y:" + ev.getRawY());
                     fLastRawY = ev.getRawY();
                     isMoving = false;
+                    isTouchingScrollView = true;
                     if(mMoveListener!=null){
                         mMoveListener.onDown();
                     }
                     break;
                 }
                 case MotionEvent.ACTION_MOVE: {
+                    isTouchingScrollView = true;
                     acquireVelocityTracker(ev);
                     if(fLastRawY==0){
                         fLastRawY = ev.getRawY();
@@ -140,6 +150,7 @@ public class DetailScrollView extends ScrollView {
                     break;
                 }
                 case MotionEvent.ACTION_UP: {
+                    isTouchingScrollView = false;
                     acquireVelocityTracker(ev);
                     /*if(getChildListView()!=null){
                         getChildListView().onTouchUp(ev);
