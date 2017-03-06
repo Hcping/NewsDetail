@@ -5,10 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Scroller;
 
@@ -213,14 +210,6 @@ public class DetailListView extends ListView implements /*View.OnTouchListener,*
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        /*try {
-            if(mFling!=null){
-                mFling.invoke(this,y);
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }*/
-
     }
 
     public void stopFling(){
@@ -232,28 +221,4 @@ public class DetailListView extends ListView implements /*View.OnTouchListener,*
         }
     }
 
-}/*extends ListView {
-
-    public MyListView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    public MyListView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyListView(Context context) {
-        super(context);
-    }
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-      *//*  //设置为Integer.MAX_VALUE>>2 是listview全部展开
-        int measureSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE>>2, MeasureSpec.AT_MOST);
-//设置为400是设置listview的高度只能有400 不全部展开   实现可以滑动的效果
-        int measureSpec1 = MeasureSpec.makeMeasureSpec(400, MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, measureSpec1);*//*
-        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >>2,
-                MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, expandSpec);
-    }
-}*/
+}
